@@ -3,3 +3,5 @@
 *.Rhistory
 *~
 *.Rproj
+*.[Zz][Ii][Pp]
+*.html

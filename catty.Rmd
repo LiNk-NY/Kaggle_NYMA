@@ -1,0 +1,26 @@
+---
+title: "Reading Caterpillar Data"
+date: August 26, 2015
+output: html_document
+---
+
+## Reading the data from the 'data.zip' from the Caterpillar link (see README)
+
+After manually ( :( ) downloading the file from your favorite browser, use the `unzip` function to look at the contents of the zip file. 
+
+```{r, eval = FALSE}
+datalist <- unzip("./data/data.zip", list = TRUE)
+read.csv(datalist[2,1])
+```
+
+## Downloading .zip file via HTTPS (not working)
+
+```{r, eval = FALSE}
+URL <- "https://www.kaggle.com/c/caterpillar-tube-pricing/download/data.zip"
+
+bin <- getBinaryURL(url = URL, ssl.verifypeer = FALSE)
+con <- file("./data/caterpillar.zip", open = "wb")
+writeBin(bin, con)
+close(con)
+unzip("./data/caterpillar.zip", exdir = "./data/")
+```
