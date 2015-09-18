@@ -4,4 +4,5 @@
 *~
 *.Rproj
 *.[Zz][Ii][Pp]
-*.html
+*.[Cc][Ss][Vv]
+*html

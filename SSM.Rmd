@@ -1,0 +1,45 @@
+---
+author: "PredictionClub"
+date: September 18, 2015
+output: html_document
+--- 
+
+```{r}
+library(data.table)
+husDataA <- fread("~/Documents/GitHub/Kaggle_NYMA/data/pums/ss13husa.csv")
+husDataB <- fread("~/Documents/GitHub/Kaggle_NYMA/data/pums/ss13husb.csv")
+husdata <- rbind(husDataA, husDataB) 
+rm(husDataA, husDataB) 
+popDataA <- fread("~/Documents/GitHub/Kaggle_NYMA/data/pums/ss13pusa.csv")
+popDataB <- fread("~/Documents/GitHub/Kaggle_NYMA/data/pums/ss13pusb.csv")
+populdata <- rbind(popDataA, popDataB)
+rm(popDataA, popDataB)
+gc()
+message("The housing data is ", format(object.size(husdata), "Gb"), " big!") 
+message("The population data is ", format(object.size(populdata), "Gb"), " big!")
+```
+
+```{r}
+library(psych)
+library(dplyr)
+varstokeep <- c("MRGI", "MRGX")
+select(populData, one_of(varstokeep))
+table(populData$SSMC)
+populData$SSMC <- factor(populData$SSMC, levels = c(0:2), labels = c("W/O SSMC", "SSMC 0", "SSMC 1"))
+levels(populData$SSMC) <- c("W/O SSMC", "W/ SSMC", "W/ SSMC")
+```
+
+```{r}
+library(maps)
+mapsdf <- data.table(REGION = factor(state.fips$region, levels = 1:4, 
+				 labels = c("North East", "MidWest", "South", "West")), 
+				 STATE = as.character(state.fips$polyname) %>% gsub(pattern = ":.*", "", .) %>%
+				 strsplit(" ") %>% sapply(function(x) { paste(toupper(substr(x, 1,1)), substring(x, 2), sep = "", collapse = " ")}),
+				 ABB = as.character(state.fips$abb), 
+				 FIPS = state.fips$fips)
+mapsdf <- rbind(mapsdf, data.frame(REGION = c("West", "West"),STATE = c("Alaska", "Hawaii"), ABB = c("AK", "HI"), FIPS = c(02, 15)))
+mapsdf <- mapsdf[!duplicated(mapsdf$FIPS),]
+mapsdf <- mapsdf[order(mapsdf$FIPS)]
+setkey(mapsdf, STATE)
+```
+
